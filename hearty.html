@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For You ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  height:100vh;
+  background:linear-gradient(135deg,#ffd6e0,#ffeaf0);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  font-family:"Comic Sans MS",cursive;
+}
+
+.card{
+  background:#ffb3c7;
+  width:92%;
+  max-width:420px;
+  min-height:560px;
+  padding:20px;
+  border-radius:20px;
+  position:relative;
+  text-align:center;
+  box-shadow:0 10px 30px rgba(0,0,0,.15);
+  perspective:1400px;
+}
+
+.page{
+  width:100%;
+  height:100%;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform .45s cubic-bezier(.4,0,.2,1);
+}
+.page.animating{
+  transform:rotateY(-90deg);
+}
+
+h1{color:#c9184a}
+p{color:#6a1a2f;font-size:18px}
+button{
+  padding:12px 20px;
+  border:none;
+  border-radius:12px;
+  font-size:16px;
+  margin:10px;
+  cursor:pointer;
+  transition:.15s;
+}
+button:active{transform:scale(.95)}
+.primary{background:#ff4d6d;color:#fff}
+.secondary{background:#ff8fab;color:#fff}
+.emoji{font-size:60px}
+
+.heartNav{
+  margin-top:14px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  cursor:pointer;
+  animation:pulse 1.2s infinite, wiggle 3s infinite;
+}
+.heartNav span{
+  font-size:11px;
+  color:#c9184a;
+  margin-bottom:4px;
+}
+.heartNav .heart{font-size:30px}
+
+@keyframes pulse{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.12)}
+  100%{transform:scale(1)}
+}
+@keyframes wiggle{
+  0%, 90%, 100% { transform: rotate(0deg) scale(1); }
+  92% { transform: rotate(-5deg) scale(1.05); }
+  94% { transform: rotate(5deg) scale(1.05); }
+  96% { transform: rotate(-5deg) scale(1.05); }
+  98% { transform: rotate(0deg) scale(1.05); }
+}
+
+.floating-heart{
+  position:fixed;
+  bottom:-30px;
+  color:#ff8fab;
+  opacity:.25;
+  animation:floatUp 12s linear forwards;
+  pointer-events:none;
+}
+@keyframes floatUp{
+  from{transform:translateY(0)}
+  to{transform:translateY(-120vh) translateX(80px)}
+}
+
+.diary{
+  background:#fffaf0;
+  border-radius:8px;
+  padding:20px;
+  margin:10px;
+  box-shadow:0 5px 15px rgba(0,0,0,.2);
+  text-align:left;
+  position:relative;
+}
+.diary:before{
+  content:"";
+  position:absolute;
+  left:35px; top:0; bottom:0;
+  width:2px;
+  background:#ffb3c7;
+}
+.diary-lines{
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 26px,
+    #ffd6e0 27px
+  );
+  padding-left:50px;
+  min-height:260px;
+}
+.diary-text{
+  font-family:'Patrick Hand',cursive;
+  color:#5a1a2f;
+  font-size:20px;
+  line-height:27px;
+  white-space:pre-wrap;
+}
+
+.confetti{
+  position:fixed;
+  top:-10px;
+  pointer-events:none;
+  border-radius:3px;
+  opacity:0.9;
+}
+@keyframes confettiFall{
+  0%{transform:translateY(0) translateX(0) rotate(0deg);}
+  100%{transform:translateY(110vh) translateX(var(--drift)) rotate(var(--rot));}
+}
+
+.gifts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gifts button{grid-column:span 2}
+img{max-width:100%;border-radius:12px}
+
+/* QR tweak (optional styling hook) */
+.songQR{
+  display:block;
+  margin:20px auto 0;
+  width:160px;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="page" id="page"></div>
+</div>
+
+<script>
+const CONFIG = {
+  name: "SWATI",
+  gifts: [
+    {
+      title: "🌹 A Rose For You",
+      giftMessage: "Saying this would be an understatement because you MY LOVE deserve the whole world and i want to be the man to give it all to you😌❤️",
+      letterTitle: "Words from my heart",
+      letterText: `It has been well over a decade of silent years that the cool girl has watched this nerdy boy which he was blatantly unaware of for the good first half but ever since he know he hasnt stop thinking 😌about how mysterious FATE is that it wrote HER in HIS story and he will be forever grateful to THE ALMIGHTY for deeming him worthy of her ❤️. This goody two shoes never thought he could even be someones prince charming let alone the coolest woman in the town🤭 You My LOVE have made me more than i ever thought i could be and i wanna break that limit for you😌`,
+      songQR: "dilka.png"
+    },
+    {
+      title: "🍫 Sweet Surprise",
+      giftMessage: "I dont know what surprises people but you Darling surprise me everyday even more with your kindness and your intensity to love❤️🧿 💕",
+      letterTitle: "Just for you",
+      letterText: `You are special because of the small things that you do everyday spreading good in this world you dont think nobody is noticing but I do and it makes me fall in love with you once over again but even deeper this time , how you exude radiance when you speak😌 , how genuinely and openheartedly  you laugh when you find something amusing , how your beautiful face pouts into an angry bubble🤭when you dont get something you were expecting, your cool girl aura really intimidated this nerdy boy🥹about how could she ever fall for him her world was soo big and he lived in his books , It really is a fairy tale 🤭❤️wait i got distracted 😭 
+Yes so i was saying… how your worries includes even those who have no one to think for them, your sorrow was extended to those even who had forgotten to grieve for them , your passion for life like no other 
+I believe in the good the bright and merry when i look at your face because it has all the colors that my heart yearns for ……🥹❤️
+`,
+      songQR: "palat.png"
+    },
+    {
+      title: "💍 My Promise",
+      giftMessage: "To be with you in every step of our lives growing in love even more for each other 😌❤️♾️",
+      letterTitle: "My oath to you",
+      letterText: `This is me being honest with you about my feelings.
+As a kid it felt love was held by grand moments but its the small ones that weave and strengthen it , no timing or words are ever perfect to begin with its just this moment of ours that we will remember. Im here to promise you my heart and the feelings in it all for you only with all sincerity.
+I promise to respect your SPACE your DREAMS and above all US.❤️🧿
+Whatever the future looks like i want to look at it holding your hand and i want to assure you that my intentions with you are genuine , I AM HERE because i want to be because YOU MATTER TO ME 🥹🫂. 
+`,
+      songQR: "zaalima.png"
+    }
+  ]
+};
+
+let giftIndex = 0;
+let firstYes = true;
+const page = document.getElementById("page");
+
+function spawnHearts(){
+  const h = document.createElement("div");
+  h.className = "floating-heart";
+  h.innerText = "💗";
+  h.style.left = Math.random()*100+"vw";
+  h.style.fontSize = (10+Math.random()*22)+"px";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),12000);
+}
+setInterval(spawnHearts,900);
+
+function confetti(){
+  for(let i=0;i<120;i++){
+    const c=document.createElement("div");
+    const size=6+Math.random()*10;
+    const drift=(Math.random()*240-120)+"px";
+    const rotate=(Math.random()*720-360)+"deg";
+    const duration=2.5+Math.random()*2.5;
+    c.className="confetti";
+    c.style.width=size+"px";
+    c.style.height=size+"px";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=`hsl(${Math.random()*360},80%,60%)`;
+    c.style.setProperty("--drift",drift);
+    c.style.setProperty("--rot",rotate);
+    c.style.animation=`confettiFall ${duration}s ease-out forwards`;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),duration*1000);
+  }
+}
+
+function typeText(el, text){
+  el.innerText="";
+  let i=0;
+  const timer=setInterval(()=>{
+    el.innerText += text[i++];
+    if(i>=text.length) clearInterval(timer);
+  },24);
+}
+
+function flipTo(html, after){
+  page.classList.add("animating");
+  setTimeout(()=>{
+    page.innerHTML = html;
+    page.classList.remove("animating");
+    if(after) after();
+  }, 220);
+}
+
+function showAsk(){
+  page.innerHTML = `
+    <div class="emoji">💌</div>
+    <h1>Hey ${CONFIG.name}</h1>
+    <p>Will you be my Valentine? 💕</p>
+    <button class="primary" onclick="yes()">Yes 💖</button>
+    <button class="secondary" onclick="no()">No 😅</button>
+  `;
+}
+
+function yes(){
+  if(firstYes){ confetti(); firstYes=false; }
+  flipTo(renderGifts());
+}
+
+function no(){
+  flipTo(`
+    <div class="emoji">💔</div>
+    <h1>Nice try 😏</h1>
+    <p>That button doesn’t work</p>
+    <button class="primary" onclick="showAsk()">Try Again</button>
+  `);
+}
+
+function renderGifts(){
+  return `
+    <h1>I have something for you 🎁</h1>
+    <div class="gifts">
+      ${CONFIG.gifts.map((g,i)=>`<button class="primary" onclick="openGift(${i})">${g.title}</button>`).join("")}
+    </div>
+  `;
+}
+
+function openGift(i){
+  giftIndex=i;
+  const g=CONFIG.gifts[i];
+  flipTo(`
+    <div class="emoji">🎁</div>
+    <h1>${g.title}</h1>
+    <p>${g.giftMessage}</p>
+
+    <div class="heartNav" onclick="openLetter()">
+      <span>click me</span>
+      <div class="heart">💗</div>
+    </div>
+  `);
+}
+
+function openLetter(){
+  const g=CONFIG.gifts[giftIndex];
+  flipTo(`
+    <h1>${g.letterTitle}</h1>
+    <div class="diary">
+      <div class="diary-lines">
+        <div id="letterBox" class="diary-text"></div>
+      </div>
+    </div>
+
+    <div class="heartNav" onclick="openSong()">
+      <span>click me</span>
+      <div class="heart">💗</div>
+    </div>
+  `, ()=>{
+    typeText(document.getElementById("letterBox"), g.letterText);
+  });
+}
+
+function openSong(){
+  const g=CONFIG.gifts[giftIndex];
+  flipTo(`
+    <h1>A song for you 🎵</h1>
+    <p>Scan this</p>
+    <img src="${g.songQR}" class="songQR">
+
+    <div class="heartNav" onclick="restart()">
+      <span>restart</span>
+      <div class="heart">❤️</div>
+    </div>
+  `);
+}
+
+function restart(){
+  showAsk();
+}
+
+showAsk();
+</script>
+</body>
+</html>
